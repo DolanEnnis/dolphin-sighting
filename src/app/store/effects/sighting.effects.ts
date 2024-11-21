@@ -7,7 +7,6 @@ import * as SightingActions from '../actions/sighting.actions';
 
 @Injectable()
 export class SightingEffects {
-  // @ts-ignore
   loadSightings$ = createEffect(() =>
     this.actions$.pipe(
       ofType(SightingActions.loadSightings),
