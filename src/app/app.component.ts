@@ -3,13 +3,13 @@ import { CommonModule} from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {AuthService} from './shared/services/auth.service';
+import {FooterComponent} from './footer/footer.component'
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule,RouterOutlet, RouterLink],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    imports: [CommonModule, RouterOutlet, RouterLink,FooterComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   authService = inject(AuthService);

@@ -13,6 +13,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { routes } from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 // @ts-ignore
 bootstrapApplication(AppComponent,
@@ -26,7 +27,7 @@ bootstrapApplication(AppComponent,
       provideFirestore(() => getFirestore()),  // Add the reducer here
       provideHttpClient(),
       provideRouter(routes),
-      provideHttpClient() // ... other providers
+      provideHttpClient(), provideAnimationsAsync() // ... other providers
     ],
   });
 function provideAnimations(): import("@angular/core").Provider | import("@angular/core").EnvironmentProviders {

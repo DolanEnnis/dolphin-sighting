@@ -5,13 +5,12 @@ import {Router} from '@angular/router';
 import {AuthService} from '../../shared/services/auth.service';
 
 @Component({
-  selector: 'app-register',
-  standalone: true,
+    selector: 'app-register',
     imports: [
         ReactiveFormsModule
     ],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+    templateUrl: './register.component.html',
+    styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   fb = inject(FormBuilder)
