@@ -1,15 +1,18 @@
 <mat-toolbar>
 
-@if (authService.currentUserSig()== null){
+@if (authService.currentUserSig()=== null){
   <div>
     <a routerLink="/login">  Login  </a>
     <a routerLink="/register"> Register</a>
   </div>
 }
-@if (authService.currentUserSig()){
+@else{
   <div>
     {{authService.currentUserSig()?.username}}
-    <span (click)="logout()"> Logout</span>
+    <a routerLink="/reports">List Of Reports</a>
+    <a routerLink="/test">Test Page</a>
+    <button mat-button (click)="logout()">Logout</button>
   </div>
 }
+
 </mat-toolbar>

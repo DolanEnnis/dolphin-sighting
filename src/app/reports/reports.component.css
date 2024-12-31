@@ -1,0 +1,10 @@
+.loading-indicator {
+  display: flex;
+  justify-content: center; /* Horizontally center */
+  align-items: center;     /* Vertically center */
+  height: 100px; /* Or whatever height you want */
+}
+
+table {
+  width: 100%;
+}

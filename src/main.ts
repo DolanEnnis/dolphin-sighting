@@ -1,12 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import { provideStore } from '@ngrx/store';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { environment } from './environments/environment';
-import { sightingReducer } from './app/store/reducers/sighting.reducer'
-import { importProvidersFrom } from '@angular/core';
+import { sightingReducer } from './app/store/reducers/sighting.reducer';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
@@ -14,23 +10,23 @@ import { routes } from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { FIREBASE_OPTIONS } from '@angular/fire/compat'; // Import FIREBASE_OPTIONS
 
-// @ts-ignore
-bootstrapApplication(AppComponent,
-  {
-    providers: [
-      provideStore({sighting: sightingReducer}),
-      importProvidersFrom(AngularFireModule.initializeApp(environment.firebase)),
-      importProvidersFrom(AngularFirestoreModule),
-      provideFirebaseApp(() => initializeApp(environment.firebase)),
-      provideAuth(() => getAuth()),
-      provideFirestore(() => getFirestore()),  // Add the reducer here
-      provideHttpClient(),
-      provideRouter(routes),
-      provideHttpClient(), provideAnimationsAsync() // ... other providers
-    ],
-  });
-function provideAnimations(): import("@angular/core").Provider | import("@angular/core").EnvironmentProviders {
-    throw new Error('Function not implemented.');
-}
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideStore({ sighting: sightingReducer }),
+    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }, // Provide Firebase config
+    provideFirebaseApp(() => {
+      const app = initializeApp(environment.firebase);
+      console.log("Firebase App Initialized:", app); // Log the app instance
+      return app; // Return the app instance
+    }),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+    provideHttpClient(),
+    provideRouter(routes),
+    provideAnimationsAsync(),
+  ],
+}).catch(err => console.error("Bootstrap Error:", err)); // Add error logging here
 
