@@ -4,10 +4,12 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {AuthService} from './shared/services/auth.service';
 import {FooterComponent} from './footer/footer.component'
+import {HeaderComponent} from './navigation/header/header.component';
+
 
 @Component({
     selector: 'app-root',
-    imports: [CommonModule, RouterOutlet, RouterLink,FooterComponent],
+    imports: [CommonModule, RouterOutlet, RouterLink,FooterComponent,HeaderComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })

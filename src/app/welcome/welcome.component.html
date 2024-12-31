@@ -1,0 +1,112 @@
+<div class="welcome-container" fxLayout="column">
+  <header>
+    <h1 class="myheader">Welcome to Shannon Estuary Monitoring Service</h1>
+  </header>
+
+  <section class="content-section" role="main">
+    <p>
+      This is a service mainly designed for the Shannon Pilots to report their
+      sightings of dolphins and for the
+      <a href="http://www.iwdg.ie/" target="_blank" rel="noopener noreferrer" aria-label="Visit Irish Whale and Dolphin Group website">
+        Irish Whale and Dolphin Group
+      </a>
+      to see these reports.
+    </p>
+
+    <p>
+      However it is open to all, to both report and view other reports on Dolphins
+      in the Shannon Estuary. We ask you to
+      <a routerLink="/signup" aria-label="Navigate to sign up page">sign up</a> first.
+    </p>
+
+
+    @if (authService.currentUserSig()== null){
+    <div  class="auth-buttons" fxLayout="row" fxLayoutAlign="center center">
+      <a routerLink="/register" class="button">
+        <button mat-raised-button color="primary" class="btn">SIGN UP NOW</button>
+      </a>
+      <a routerLink="/login" class="button">
+        <button mat-raised-button color="primary" class="btn">LOG IN NOW</button>
+      </a>
+    </div>
+    }
+
+    @if (authService.currentUserSig()){
+    <div class="auth-buttons" fxLayout="row" fxLayoutAlign="center center">
+      <a routerLink="/new" class="button">
+        <button mat-raised-button color="primary" class="btn">CREATE NEW REPORT</button>
+      </a>
+    </div>
+    }
+  </section>
+
+  <section class="content-section" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="20px">
+    <div fxFlex="40" fxLayoutAlign="center center">
+    <img
+      ngSrc="/PilotBoat.jpg"
+      alt="Shannon Pilot Boat stationed at Scattery Island"
+
+      loading="lazy"
+      height="390" width="520"/>
+    </div>
+    <div fxFlex="60">
+    <p>
+      Shannon Pilots are proud to provide this public service. Our work is
+      devoted to safety, security and environmental protection, thus enhancing
+      port efficiency. This is why we feel it important to assist the Irish
+      Whale and Dolphin Group to hopefully get a better understanding of
+      movement and habits of the resident bottlenose dolphins on the Shannon
+      Estuary. We as maritime pilots are the only group who transit the estuary
+      throughout the year on a daily basis and are therefore in a unique
+      position to be able to gather data that was not previously explored.
+    </p>
+    </div>
+
+  </section>
+
+  <section class="content-section" fxLayout fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="20px">
+    <p>
+      The main species we have in the estuary is the Bottlenose Dolphin. They
+      are probably the best known species of dolphin due to their coastal
+      habitats, widespread distribution, and many appearances on television.
+      Bottlenose dolphins are usually seen in small groups and are rarely seen
+      alone. They are quite active at the surface of the water. When traveling
+      slowly, about one-quarter to one-third of the body appears above the
+      water. When traveling at speed they often jump clear out of the water.
+    </p>
+    <img
+      alt="Bottlenose Dolphin breaching the water surface - Photo by Simon Berrow"
+      fxFlex="40"
+      height="334"
+      loading="lazy"
+      ngSrc='/bndidpic.jpg' width="510"/>
+  </section>
+
+  <section class="content-section">
+    <h2>Observed Behaviors</h2>
+    <p>We have identified the following common behaviors (feel free to add your own observations in reports):</p>
+    <ul>
+      <li>
+        <strong>Foraging</strong> - Indications of searching for prey, prey capture or
+        feeding behaviors (surface rushing)
+      </li>
+      <li>
+        <strong>Play</strong> - Interactions with objects other than dolphins which serve no
+        obvious purpose
+      </li>
+      <li>
+        <strong>Rest</strong> - Slow, steady activity in absence of other identifiable
+        activities, often with long dive bouts (1 to 5 min)
+      </li>
+      <li>
+        <strong>Travel</strong> - Regular directional movement, including zig-zag and
+        meandering movement
+      </li>
+      <li>
+        <strong>With boat</strong> - All cases during which dolphins interact with a boat,
+        including bow- and wake-riding
+      </li>
+    </ul>
+  </section>
+</div>
+
