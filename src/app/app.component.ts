@@ -9,7 +9,7 @@ import {HeaderComponent} from './navigation/header/header.component';
 
 @Component({
     selector: 'app-root',
-    imports: [CommonModule, RouterOutlet, RouterLink,FooterComponent,HeaderComponent],
+    imports: [CommonModule, RouterOutlet, FooterComponent,HeaderComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })

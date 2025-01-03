@@ -1,94 +1,88 @@
+import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import {CommonModule, DatePipe} from '@angular/common';
+import { Sighting } from '../shared/types/sighting.type';
+import { Subscription } from 'rxjs';
+import { LoadingService } from '../shared/services/loading.service';
+import { SightingService } from '../shared/services/sighting.service';
+import {
+  ProgressSpinnerMode,
+  MatProgressSpinnerModule,
+} from '@angular/material/progress-spinner';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Timestamp } from 'firebase/firestore';
+//
 
-import { Component,OnInit, OnDestroy  } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import { Observable } from 'rxjs';
-import {Sighting} from '../shared/types/sighting.type';
-import {Subscription} from 'rxjs';
-import {LoadingService} from '../shared/services/loading.service';
-import {SightingService} from '../shared/services/sighting.service';
-import {ProgressSpinnerMode, MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
+interface SightingFormatted extends Sighting {
+  formattedDate: Date;
+}
 
 @Component({
   selector: 'app-reports',
-  imports: [CommonModule, MatProgressSpinnerModule],
+
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+
+     // Make sure this is here
+    DatePipe // If you're using the date pipe
+  ],
   providers: [],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css'
 })
-export class ReportsComponent implements OnInit, OnDestroy{
+
+export class ReportsComponent implements OnInit,  OnDestroy {
   mode: ProgressSpinnerMode = 'determinate';
   value = 50;
-  sightings: Sighting[] = [];
-  private sightingsSubscription: Subscription | undefined;
-  loading: boolean = false
+  loading: boolean = false; // Use boolean for loading state
 
-  constructor(private sightingService: SightingService,
-              private loadingService: LoadingService,
-             ) { }
+  private sightingsSubscription: Subscription | undefined;
+  dataSource = new MatTableDataSource<SightingFormatted>([]);
+  displayedColumns: string[] = ['location', 'date', 'observer'];
+
+
+  constructor(
+    private sightingService: SightingService,
+    private loadingService: LoadingService
+  ) {}
 
   ngOnInit(): void {
-    this.loadingService.setLoading(true)
-    this.sightingsSubscription = this.sightingService. getAllSightings().subscribe({
+    this.loadingService.setLoading(true);
+    this.sightingsSubscription = this.sightingService.getAllSightings('date').subscribe({
       next: (sightings) => {
-        this.sightings = sightings;
-        this.loadingService.setLoading(false)
+        const formattedSightings: SightingFormatted[] = sightings.map(
+          (sighting) => {
+            let date: Date;
+            if (sighting.date instanceof Timestamp) {
+              date = sighting.date.toDate(); // Convert Timestamp to Date
+            } else if (typeof sighting.date === 'string') {
+              date = new Date(sighting.date); // Handle string dates
+            } else if (sighting.date instanceof Date) {
+              date = sighting.date;
+            } else {
+              date = new Date(); // Provide default date
+            }
+            return { ...sighting, formattedDate: date };
+          }
+        );
+        this.dataSource.data = formattedSightings;
+
+        this.loadingService.setLoading(false);
       },
       error: (error) => {
         console.error('Error fetching sightings:', error);
-        this.loadingService.setLoading(false)
-        // Handle error appropriately, e.g., display an error message to the user
-      }
+        this.loadingService.setLoading(false);
+        // Handle error appropriately
+      },
     });
   }
 
 
+
   ngOnDestroy(): void {
-    // Unsubscribe to prevent memory leaks
     if (this.sightingsSubscription) {
       this.sightingsSubscription.unsubscribe();
     }
   }
 }
-/*
----------------------------------------------------------------------
-import { Component,OnInit, OnDestroy  } from '@angular/core';
-import {CommonModule} from '@angular/common';
-import { Observable } from 'rxjs';
-import {Sighting} from '../shared/types/sighting.type';
-import {Subscription} from 'rxjs';
-import {LoadingService} from '../shared/services/loading.service';
-import {SightingService} from '../shared/services/sighting.service';
-
-
-
-@Component({
-  selector: 'app-reports',
-  imports: [CommonModule],
-  templateUrl: './reports.component.html',
-  styleUrl: './reports.component.css'
-})
-export class ReportsComponent implements OnInit, OnDestroy{
-  sightings$: Observable<Sighting[]> | undefined;
-
-
-  loading: boolean = false
-
-  constructor(
-              private sightingService: SightingService,
-              private loadingService: LoadingService) { }
-
-  ngOnInit(): void {
-
-  }
-
-  ngOnDestroy(): void {
-    // Unsubscribe to prevent memory leaks
- /* if (this.sightingsSubscription) {
-      this.sightingsSubscription.unsubscribe();
-    }
-  }*/
-
-
-
-

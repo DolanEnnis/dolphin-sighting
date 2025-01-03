@@ -6,7 +6,7 @@ import 'firebase/compat/firestore'; // Import for firestore
 export interface Sighting {
   behaviour: string;
   comments?: string;
-  date: firebase.firestore.Timestamp | string;
+  date: any;
   id?: string;
   lat: number;            // 52.57958333333333
   location: string;       // "Long Rock"
