@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Sighting } from '../types/sighting.type';
 import { Firestore, collection, collectionData, doc, docData, setDoc, deleteDoc, query, orderBy  } from '@angular/fire/firestore';
 

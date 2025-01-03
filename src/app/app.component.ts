@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { CommonModule} from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {AuthService} from './shared/services/auth.service';
 import {FooterComponent} from './footer/footer.component'
