@@ -6,7 +6,6 @@ import {AuthService} from './shared/services/auth.service';
 import {FooterComponent} from './footer/footer.component'
 import {HeaderComponent} from './navigation/header/header.component';
 
-
 @Component({
     selector: 'app-root',
     imports: [CommonModule, RouterOutlet, FooterComponent,HeaderComponent],
