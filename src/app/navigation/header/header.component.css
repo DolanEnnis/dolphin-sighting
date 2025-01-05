@@ -1,17 +1,61 @@
-a {
-  text-decoration: none;
-  color: blue;
+.mat-toolbar {
+  background-color: #4851A5;
+  color: white;
+  display: flex; /* Ensure toolbar uses flexbox */
+  align-items: center; /* Vertically center content */
+  justify-content: space-between;
 }
 
-a:hover,
-a:active {
+.toolbar-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-info{
+  display: flex;
+  flex-direction: column; /* Stack name and buttons vertically */
+  align-items: center; /* Center horizontally */
+}
+.button-group{
+  display: flex;
+}
+.mat-toolbar .mat-button { /* Styles for all mat-buttons in toolbar */
+  background: none;
+  border: none;
+  padding: 0;
+  min-width: fit-content;
+  margin: 0 0.5rem;
+  color: inherit;
+}
+
+.mat-toolbar .logout-button{
+  color:white;
+}
+
+.mat-toolbar button.mat-button { /* Styles for BUTTONS ONLY in toolbar */
+  color: white;
+}
+.mat-toolbar .logout-button {
+  color: white;
+}
+
+.mat-toolbar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mat-toolbar a:hover,
+.mat-toolbar a:active {
   color: lightgray;
 }
 
-.navigation-items {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.loggedInName {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem; /* Add spacing below the name */
+  text-align: center;
 }
-
-
