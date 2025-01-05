@@ -1,10 +1,17 @@
-.loading-indicator {
-  display: flex;
-  justify-content: center; /* Horizontally center */
-  align-items: center;     /* Vertically center */
-  height: 100px; /* Or whatever height you want */
-}
+
 
 table {
   width: 100%;
+}
+
+.filter-pagination-container {
+  display: flex; /* Enable flexbox */
+  justify-content: space-between; /* Distribute space between items */
+  align-items: center; /* Vertically align items */
+  margin-bottom: 16px; /* Add some spacing below */
+}
+.filter-pagination-container mat-form-field {
+  flex-grow: 1;
+  max-width: 300px; /* Adjust as needed */
+  padding-top: 20px; /* Add top padding here */
 }
