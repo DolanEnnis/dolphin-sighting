@@ -10,7 +10,8 @@ import { routes } from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat'; // Import FIREBASE_OPTIONS
+import { FIREBASE_OPTIONS } from '@angular/fire/compat';
+import {AuthGuard} from './app/auth.guard'; // Import FIREBASE_OPTIONS
 
 
 bootstrapApplication(AppComponent, {
@@ -27,6 +28,7 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     provideRouter(routes),
     provideAnimationsAsync(),
+    AuthGuard,
   ],
 }).catch(err => console.error("Bootstrap Error:", err)); // Add error logging here
 
