@@ -1,0 +1,97 @@
+
+
+
+<form class="dolphininput" [formGroup]="sightingForm" (ngSubmit)="onSubmit()">
+  <button  id="whereBtn" type="submit" (click)="hereandnow()"
+           mat-raised-button >Get Here and Now</button>
+  <mat-form-field>
+    <mat-label>Date</mat-label>
+    <input matInput type="text" #dateInput placeholder="Select Date" formControlName="date">
+    <mat-error>A viewing date is required!</mat-error>
+  </mat-form-field>
+
+
+  <div class="latlong">
+  <mat-form-field>
+    <mat-label>Observer Latitude</mat-label>
+    <input matInput formControlName="latitude" pattern="[0-9]*">
+    <mat-error>Not Required, but make it a number!</mat-error>
+  </mat-form-field>
+
+    <mat-form-field >
+      <mat-label>Min</mat-label>
+      <input  matInput placeholder="Min (Not Required)"
+              formControlName="latmin" pattern="[0-9 \.]*" >
+      <mat-error>Not Required, Are you on the Shannon Estuary?</mat-error>
+
+    </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Observer Longitude</mat-label>
+    <input matInput formControlName="longitude" pattern="[0-9]*">
+    <mat-error>Not Required, but make it a number!</mat-error>
+  </mat-form-field>
+
+    <mat-form-field >
+      <mat-label>Min</mat-label>
+      <input  matInput placeholder="Min (Not Required)"
+              formControlName="longmin" pattern="[0-9 \.]*">
+      <mat-error>Not Required, Are you on the Shannon Estuary?</mat-error>
+    </mat-form-field>
+
+    </div>
+
+  <mat-form-field >
+    <mat-select formControlName="location" placeholder="Down River of what Location">
+      <mat-option *ngFor="let point of locations" [value]="point.value">
+        {{ point.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Number of Dolphins</mat-label>
+    <input matInput type="number" min="0" max="999" formControlName="dolphinCount">
+    <mat-error>About how many Dolphins can you see?</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select formControlName="seaState" placeholder="Sea State">
+      <mat-option *ngFor="let state of seaStates" [value]="state.value">
+        {{ state.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Tide</mat-label>
+    <mat-select formControlName="tide">
+      <mat-option *ngFor="let tide of tides" [value]="tide.value">
+        {{ tide.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Behaviour</mat-label>
+    <mat-select formControlName="behaviour">
+      <mat-option *ngFor="let behaviour of behaviours" [value]="behaviour.value">
+        {{behaviour.viewValue }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Comments</mat-label>
+    <textarea matInput formControlName="comments"></textarea>
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit" [disabled]="sightingForm.invalid || isSubmitting">
+    {{isSubmitting ? 'Submitting...' : 'Submit'}}
+  </button>
+  <button mat-button type="button"  color="warning" (click)="resetForm()">Clear Form</button>
+  <mat-error *ngIf="sightingForm.get('dolphinCount')?.hasError('required')">
+    Number of dolphins is required
+  </mat-error>
+</form>
+
+

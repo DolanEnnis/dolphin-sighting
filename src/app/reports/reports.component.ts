@@ -68,7 +68,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadingService.setLoading(true);
-    this.sightingsSubscription = this.sightingService.getAllSightings('date').subscribe({
+    this.sightingsSubscription = this.sightingService.getAllSightings({ sortField: 'date', sortDirection: 'asc' }).subscribe({
       next: (sightings) => {
         const formattedSightings: SightingFormatted[] = sightings.map(
           (sighting) => {
@@ -106,9 +106,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
         // Handle error appropriately
       },
     });
-  }
-
-  applyFilter(event: Event) {
+  }  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 

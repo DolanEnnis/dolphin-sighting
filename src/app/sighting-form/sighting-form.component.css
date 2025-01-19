@@ -1,0 +1,37 @@
+:root {
+  --form-width: 50%;
+  --form-margin: 5%;
+  --spacing-gap: 10px;
+}
+.dolphininput {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex-direction: column; /* Align items vertically */
+  gap: 10px; /* Adjust spacing between fields */
+  width: 50%;            /* Occupy 50% of the parent width */
+  margin-left: 5%;       /* Add a left offset of 5% */
+  margin-right: 5%;
+}
+.latlong {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* Adjust spacing between latitude and longitude fields */
+}
+
+/* Responsive adjustment for smaller screens */
+@media (max-width: 799px) { /* Adjust breakpoint as needed */
+  .dolphininput {
+    width: 100%;
+
+  }
+}
+
+
+
+@media (min-width: 800px) and (max-width: 1000px) {
+  .dolphininput {
+    width: 70%;
+  }
+}
+

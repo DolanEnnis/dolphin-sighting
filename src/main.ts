@@ -20,7 +20,6 @@ bootstrapApplication(AppComponent, {
     { provide: FIREBASE_OPTIONS, useValue: environment.firebase }, // Provide Firebase config
     provideFirebaseApp(() => {
       const app = initializeApp(environment.firebase);
-      console.log("Firebase App Initialized:", app); // Log the app instance
       return app; // Return the app instance
     }),
     provideAuth(() => getAuth()),

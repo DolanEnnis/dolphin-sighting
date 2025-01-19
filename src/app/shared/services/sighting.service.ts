@@ -1,7 +1,12 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import {catchError, Observable} from 'rxjs';
 import { Sighting } from '../types/sighting.type';
 import { Firestore, collection, collectionData, doc, docData, setDoc, deleteDoc, query, orderBy  } from '@angular/fire/firestore';
+
+interface SortOptions {
+  sortField: string;
+  sortDirection: 'asc' | 'desc';
+}
 
 @Injectable({
   providedIn: 'root' // Important: Keep this
@@ -17,13 +22,17 @@ export class SightingService {
   }
   */
 
-  getAllSightings(sortField: string, sortDirection: 'asc' | 'desc' = 'desc'): Observable<Sighting[]> {
+
+
+  getAllSightings(options: SortOptions): Observable<Sighting[]> {
     const sightingsCollection = collection(this.firestore, 'sightings');
-
-    // Create a query with orderBy
-    const q = query(sightingsCollection, orderBy(sortField, sortDirection));
-
-    return collectionData(q, { idField: 'id' }) as Observable<Sighting[]>;
+    const q = query(sightingsCollection, orderBy(options.sortField, options.sortDirection));
+    return collectionData(q, { idField: 'id' }).pipe(
+      catchError(error => {
+        console.error('Error fetching sightings:', error);
+        return [];
+      })
+    ) as Observable<Sighting[]>;
   }
 
   getItem(id: string): Observable<Sighting> {
