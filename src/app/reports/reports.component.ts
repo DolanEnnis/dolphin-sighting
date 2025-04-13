@@ -4,7 +4,7 @@ import { Sighting } from '../shared/types/sighting.type';
 import { Subscription } from 'rxjs';
 import { LoadingService } from '../shared/services/loading.service';
 import { SightingService } from '../shared/services/sighting.service';
-import { MatProgressSpinnerModule, ProgressSpinnerMode } from '@angular/material/progress-spinner';
+//import { MatProgressSpinnerModule, ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import {MatIconButton} from '@angular/material/button';
 
 /**
  * Interface for sighting data with formatted date.
@@ -35,7 +36,7 @@ interface SightingFormatted extends Sighting {
   standalone: true,
   imports: [
     CommonModule,
-    MatProgressSpinnerModule,
+    //MatProgressSpinnerModule,
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
@@ -44,6 +45,7 @@ interface SightingFormatted extends Sighting {
     DatePipe,
     MatCardModule,
     MatIconModule,
+    MatIconButton,
   ],
   providers: [],
   templateUrl: './reports.component.html',
@@ -51,9 +53,9 @@ interface SightingFormatted extends Sighting {
 })
 export class ReportsComponent implements OnInit, OnDestroy {
   // Configuration for the progress spinner.
-  mode: ProgressSpinnerMode = 'determinate';
+ //essSpinnerMode = 'determinate';
   value = 50; // Initial value (not used in 'determinate' mode)
-  loading: boolean = false; // Flag to indicate data loading state
+ // loading: boolean = false; // Flag to indicate data loading state
 
   private sightingsSubscription: Subscription | undefined; // Subscription for sighting data observable
   dataSource = new MatTableDataSource<SightingFormatted>([]); // Data source for the MatTable
