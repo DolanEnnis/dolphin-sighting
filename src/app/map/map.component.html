@@ -5,4 +5,9 @@
   </mat-card-content>
 </mat-card>
 
-
+<div style="margin-top: 16px;">
+  <mat-radio-group aria-label="Select a year" [(ngModel)]="selectedYear" (change)="filterByYear()">
+    <mat-radio-button value="all">All Years</mat-radio-button>
+    <mat-radio-button *ngFor="let year of uniqueYears" [value]="year">{{ year }}</mat-radio-button>
+  </mat-radio-group>
+</div>

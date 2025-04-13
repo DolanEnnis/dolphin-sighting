@@ -29,7 +29,7 @@ export class WelcomeComponent implements OnInit {
       } else {
         this.authService.currentUserSig.set(null);
       }
-      console.log(this.authService.currentUserSig());
+
     });
   }
 }

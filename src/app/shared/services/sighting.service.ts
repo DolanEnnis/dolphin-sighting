@@ -1,7 +1,23 @@
 import { Injectable, inject } from '@angular/core';
-import {catchError, Observable} from 'rxjs';
+import { catchError, Observable, map } from 'rxjs';
 import { Sighting } from '../types/sighting.type';
-import { Firestore, collection, collectionData, doc, docData, setDoc, deleteDoc, query, orderBy  } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  collectionData,
+  doc,
+  docData,
+  setDoc,
+  deleteDoc,
+  query,
+  orderBy,
+  Timestamp,
+} from '@angular/fire/firestore';
+
+// Define the SightingFormatted interface
+interface SightingFormatted extends Sighting {
+  formattedDate: Date;
+}
 
 interface SortOptions {
   sortField: string;
@@ -9,46 +25,61 @@ interface SortOptions {
 }
 
 @Injectable({
-  providedIn: 'root' // Important: Keep this
+  providedIn: 'root', // Important: Keep this
 })
 export class SightingService {
   private firestore: Firestore = inject(Firestore); // Inject Firestore
 
-  constructor() { }
-/*
-  getAllSightings(): Observable<Sighting[]> {
-    const sightingsCollection = collection(this.firestore, 'sightings');
-    return collectionData(sightingsCollection, { idField: 'id' }) as Observable<Sighting[]>;
+  constructor() {}
+
+  convertToSightingFormatted(sighting: Sighting): SightingFormatted {
+    let date: Date;
+    if (sighting.date instanceof Timestamp) {
+      date = sighting.date.toDate();
+    } else if (typeof sighting.date === 'string') {
+      date = new Date(sighting.date);
+    } else if (sighting.date instanceof Date) {
+      date = sighting.date;
+    } else {
+      date = new Date(); // Default date
+    }
+    return { ...sighting, formattedDate: date };
   }
-  */
 
-
-
-  getAllSightings(options: SortOptions): Observable<Sighting[]> {
+  getAllSightings(options: SortOptions): Observable<SightingFormatted[]> {
     const sightingsCollection = collection(this.firestore, 'sightings');
-    const q = query(sightingsCollection, orderBy(options.sortField, options.sortDirection));
+    const q = query(
+      sightingsCollection,
+      orderBy(options.sortField, "desc")
+    );
     return collectionData(q, { idField: 'id' }).pipe(
-      catchError(error => {
+      catchError((error) => {
         console.error('Error fetching sightings:', error);
         return [];
-      })
-    ) as Observable<Sighting[]>;
+      }),
+      map((sightings) =>
+        (sightings as Sighting[]).map((sighting) => this.convertToSightingFormatted(sighting))
+      )
+    ) as Observable<SightingFormatted[]>;
   }
 
   getItem(id: string): Observable<Sighting> {
     const sightingDoc = doc(this.firestore, `sightings/${id}`);
     return docData(sightingDoc) as Observable<Sighting>;
   }
-  create(sighting: Sighting): Promise<void>{
+
+  create(sighting: Sighting): Promise<void> {
     const sightingsCollection = collection(this.firestore, 'sightings');
     return setDoc(doc(sightingsCollection), sighting);
   }
-  update(sighting: Sighting, id: string): Promise<void>{
+
+  update(sighting: Sighting, id: string): Promise<void> {
     const sightingDoc = doc(this.firestore, `sightings/${id}`);
     return setDoc(sightingDoc, sighting);
   }
-  delete(id: string): Promise<void>{
+
+  delete(id: string): Promise<void> {
     const sightingDoc = doc(this.firestore, `sightings/${id}`);
-    return deleteDoc(sightingDoc)
+    return deleteDoc(sightingDoc);
   }
 }
