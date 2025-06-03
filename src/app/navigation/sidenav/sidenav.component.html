@@ -1,1 +1,23 @@
-<p>sidenav works!</p>
+<mat-nav-list>
+  @if (!authService.currentUserSig()) {
+    <a mat-list-item routerLink="/login" (click)="drawer.close()">
+      Login
+    </a>
+    <a mat-list-item routerLink="/register" (click)="drawer.close()">
+      Register
+    </a>
+  } @else {
+    <a mat-list-item routerLink="/sightingForm" (click)="drawer.close()">
+      New Report
+    </a>
+    <a mat-list-item routerLink="/reports" (click)="drawer.close()">
+      List Of Reports
+    </a>
+    <a mat-list-item routerLink="/map" (click)="drawer.close()">
+      Map
+    </a>
+    <mat-list-item (click)="logout(); drawer.close()">
+      Logout
+    </mat-list-item>
+  }
+</mat-nav-list>

@@ -1,6 +1,15 @@
-
-<app-header></app-header>
-<main>
-<router-outlet></router-outlet>
-</main>
-<app-footer></app-footer>
+<mat-drawer-container class="drawer-container">
+  <mat-drawer #drawer mode="side">
+    <app-sidenav [drawer]="drawer"></app-sidenav>
+  </mat-drawer>
+  <mat-drawer-content>
+    <app-header></app-header>
+    <button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+    <app-footer></app-footer>
+  </mat-drawer-content>
+</mat-drawer-container>
