@@ -1,23 +1,15 @@
-//22 Nov 24 implemented with https://www.google.com/search?q=angular+standalone+firebase+auth&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:aa233234,vid:586O934xrhQ,st:0
-
-import {inject, Injectable, signal} from '@angular/core';
+import {Injectable, inject, signal} from '@angular/core';
 import {
   Auth,
+  user,
   createUserWithEmailAndPassword,
+  updateProfile,
   signInWithEmailAndPassword,
-  updateProfile, user
-} from '@angular/fire/auth'
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import {
-
-
   signOut,
-  getAuth,
-  User as FirebaseAuthUser
-} from 'firebase/auth';
-import { Observable, from, of } from 'rxjs';
-import { UserInterface } from '../types/userInterface';
-import { map, switchMap } from 'rxjs/operators';
+  User
+} from '@angular/fire/auth';
+import {from, Observable} from 'rxjs';
+import {UserInterface} from '../types/userInterface';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +49,9 @@ export class AuthService {
   logout(): Observable <void> {
     const promise = signOut(this.firebaseAuth);
     return from(promise);
-}
+  }
 
+  getCurrentUser(): User | null {
+    return this.firebaseAuth.currentUser;
+  }
 }

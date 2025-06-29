@@ -1,6 +1,3 @@
-
-
-
 <form class="dolphininput" [formGroup]="sightingForm" (ngSubmit)="onSubmit()">
   <button  id="whereBtn" type="submit" (click)="hereandnow()"
            mat-raised-button >Get Here and Now</button>
@@ -89,9 +86,9 @@
     {{isSubmitting ? 'Submitting...' : 'Submit'}}
   </button>
   <button mat-button type="button"  color="warning" (click)="resetForm()">Clear Form</button>
-  <mat-error *ngIf="sightingForm.get('dolphinCount')?.hasError('required')">
+<!--  <mat-error *ngIf="sightingForm.get('dolphinCount')?.hasError('required')">
     Number of dolphins is required
-  </mat-error>
-</form>
+  </mat-error>-->
+  </form>
 
 

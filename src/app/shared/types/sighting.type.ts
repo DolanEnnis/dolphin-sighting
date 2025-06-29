@@ -1,5 +1,6 @@
 
-import firebase from 'firebase/compat/app'; // Or import from 'firebase/app' and other specific modules
+import firebase from 'firebase/compat/app';
+import flatpickr from 'flatpickr'; // Or import from 'firebase/app' and other specific modules
 //import 'firebase/compat/firestore'; // Import for firestore
 //import not needed as using date: any;
 
@@ -18,4 +19,20 @@ export interface Sighting {
   seaState: string;       // "2"
   tide: string;           // "HW -3"
 }
+/*
+const tidiedData  = {
+  date: typeof rawFormValue.date === 'string'
+    ? flatpickr.parseDate(rawFormValue.date, "d-m-Y H:i")
+    : rawFormValue.date,
+  lat: Number(rawFormValue.latitude) + Number(rawFormValue.latmin/60),
+  long: Number(rawFormValue.longitude) + Number(rawFormValue.longmin/60),
+  location: rawFormValue.location,
+  numbers: rawFormValue.dolphinCount,
+  seaState: rawFormValue.seaState,
+  tide: rawFormValue.tide,
+  behaviour: rawFormValue.behaviour,
+  comments: rawFormValue.comments,
+  observer: currentUser ? currentUser.name : 'Anonymous',
+  observerID: currentUser ? currentUser.uid : 'Anonymous',
+};*/
 

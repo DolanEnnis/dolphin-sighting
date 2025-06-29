@@ -1,19 +1,22 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit  } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
-import {NgForOf, NgIf} from '@angular/common';
-import {MatNativeDateModule} from '@angular/material/core';
-import flatpickr from "flatpickr";
-import { UIService } from "../shared/services/ui.service";
-import {Router} from '@angular/router';
-import { Sighting } from '../shared/types/sighting.type';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgForOf,  } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import flatpickr from 'flatpickr';
+import { AuthService } from '../shared/services/auth.service';
+import { SightingService } from '../shared/services/sighting.service';
+//import { Sighting } from '../shared/types/sighting.type';
+import { UIService } from '../shared/services/ui.service';
 
 @Component({
   selector: 'app-sighting-form',
+  standalone: true,
   providers: [UIService],
   imports: [
     ReactiveFormsModule,
@@ -24,20 +27,18 @@ import { Sighting } from '../shared/types/sighting.type';
     MatNativeDateModule,
     MatButtonModule,
     MatSelectModule,
-    NgIf,
+
   ],
   templateUrl: './sighting-form.component.html',
   styleUrl: './sighting-form.component.css'
 })
 export class SightingFormComponent implements OnInit, AfterViewInit {
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private uiService: UIService) { }
   sightingForm!: FormGroup;
-
+  isSubmitting = false;
+  authService = inject(AuthService);
   public now = new Date();
-  public max = (this.now.getDate()+1)
-  public min = new Date(2024,2, 4, 4, 44);
+  //public max = (this.now.getDate()+1)
+  //public min = new Date(2024,2, 4, 4, 44);
   private buoy: string = '';
 
   locations: {value: string, viewValue: string}[] = [
@@ -95,6 +96,12 @@ export class SightingFormComponent implements OnInit, AfterViewInit {
   @ViewChild('dateInput') dateInput!: ElementRef;
 
 
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private sightingService: SightingService,
+    private uiService: UIService
+  ) { }
 
   ngOnInit(): void {
     this.sightingForm = this.fb.group({
@@ -141,7 +148,9 @@ export class SightingFormComponent implements OnInit, AfterViewInit {
           });
         },
         error => {
-          console.log(error);
+          // Handle error
+          console.error(error);
+          this.uiService.showSnackbar('Could not get location, please enter manually.', 'error');
         }
       );
     }
@@ -150,7 +159,7 @@ export class SightingFormComponent implements OnInit, AfterViewInit {
 
   getBuoy(longitude: number): string {
     if (longitude > 10 || longitude < 8.6) {
-      this.uiService.showSnackbar("This Position is not on the River!!", "", 3000);
+      this.uiService.showSnackbar("This Position is not on the River!!", "");
     } else if (longitude > 9.7836) {
       this.buoy = 'Ballybunnion';
     } else if (longitude > 9.7317) {
@@ -187,39 +196,47 @@ export class SightingFormComponent implements OnInit, AfterViewInit {
     return this.buoy;
   }
 
-
-
-  isSubmitting = false;
-
-  onSubmit() {
+  async onSubmit() {
+    if (this.sightingForm.invalid) {
+      return;
+    }
     if (this.sightingForm.valid) {
       this.isSubmitting = true;
+      const currentUser = this.authService.getCurrentUser();
+
       console.log('Form submitted:', this.sightingForm.value);
       const rawFormValue = this.sightingForm.value;
       const tidiedData  = {
         date: typeof rawFormValue.date === 'string'
           ? flatpickr.parseDate(rawFormValue.date, "d-m-Y H:i")
           : rawFormValue.date,
-        latitude: Number(rawFormValue.latitude) + Number(rawFormValue.latmin/60),
-        longitude: Number(rawFormValue.longitude) + Number(rawFormValue.longmin/60),
+        lat: Number(rawFormValue.latitude) + Number(rawFormValue.latmin/60),
+        long: Number(rawFormValue.longitude) + Number(rawFormValue.longmin/60),
         location: rawFormValue.location,
-        dolphinCount: rawFormValue.dolphinCount,
+        numbers: rawFormValue.dolphinCount,
         seaState: rawFormValue.seaState,
         tide: rawFormValue.tide,
         behaviour: rawFormValue.behaviour,
         comments: rawFormValue.comments,
+        observer: currentUser?.displayName || 'Anonymous', // Corrected line
+        observerID: currentUser ? currentUser.uid : 'Anonymous',
       }
       console.log('Tidied submitted:', tidiedData);
 
-
-      this.isSubmitting = false;
-      this.router.navigate(['reports']).then(r => {
-        this.uiService.showSnackbar("Sighting Submitted", "", 3000);
-      });
+      try {
+        await this.sightingService.create(tidiedData);
+        this.uiService.showSnackbar('Sighting successfully created!', 'success');
+        this.router.navigate(['/reports']);
+      } catch (error) {
+        console.error('Error creating sighting:', error);
+        this.uiService.showSnackbar('Error creating sighting, please try again.', 'error');
+      } finally {
+        this.isSubmitting = false;
+      }
     }
   }
 
   resetForm() {
     this.sightingForm.reset();
-  }
-}
+    this.hereandnow();
+  };}
