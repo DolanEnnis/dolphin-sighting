@@ -1,61 +1,50 @@
-.mat-toolbar {
+mat-toolbar {
   background-color: #4851A5;
   color: white;
-  display: flex; /* Ensure toolbar uses flexbox */
-  align-items: center; /* Vertically center content */
+  display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0 16px; /* Added padding for better spacing */
 }
 
 .toolbar-title {
   font-size: 1.25rem;
   font-weight: bold;
-  margin-left: 1rem;
 }
 
 .spacer {
-  flex: 1 1 auto;
+  flex: 1 1 auto; /* This correctly pushes items to the sides */
 }
 
-.user-info{
+.user-info {
   display: flex;
-  flex-direction: column; /* Stack name and buttons vertically */
-  align-items: center; /* Center horizontally */
-}
-.button-group{
-  display: flex;
-}
-.mat-toolbar .mat-button { /* Styles for all mat-buttons in toolbar */
-  background: none;
-  border: none;
-  padding: 0;
-  min-width: fit-content;
-  margin: 0 0.5rem;
-  color: inherit;
-}
-
-.mat-toolbar .logout-button{
-  color:white;
-}
-
-.mat-toolbar button.mat-button { /* Styles for BUTTONS ONLY in toolbar */
-  color: white;
-}
-.mat-toolbar .logout-button {
-  color: white;
-}
-
-.mat-toolbar a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.mat-toolbar a:hover,
-.mat-toolbar a:active {
-  color: lightgray;
+  flex-direction: column;
+  align-items: center;
 }
 
 .loggedInName {
   font-size: 0.9rem;
-  margin-bottom: 0.5rem; /* Add spacing below the name */
+  margin-bottom: 0.5rem;
   text-align: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px; /* Use gap for consistent spacing between buttons */
+}
+
+/* --- Simplified Button and Link Styling --- */
+/*
+  Consolidated rules for both <a> and <button> elements inside the toolbar
+  to reduce redundancy and ensure consistency.
+*/
+.mat-toolbar a,
+.mat-toolbar button {
+  color: white;
+  text-decoration: none; /* This applies to <a> tags */
+}
+
+.mat-toolbar a:hover,
+.mat-toolbar button:hover {
+  color: lightgray;
 }

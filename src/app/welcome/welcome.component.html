@@ -1,4 +1,4 @@
-<div class="welcome-container" fxLayout="column">
+<div class="welcome-container">
   <header>
     <h1 class="myheader">Welcome to Shannon Estuary Monitoring Service</h1>
   </header>
@@ -21,7 +21,7 @@
 
 
     @if (authService.currentUserSig()== null){
-    <div  class="auth-buttons" fxLayout="row" fxLayoutAlign="center center">
+    <div class="auth-buttons">
       <a routerLink="/register" class="button">
         <button mat-raised-button color="primary" class="btn">SIGN UP NOW</button>
       </a>
@@ -32,54 +32,56 @@
     }
 
     @if (authService.currentUserSig()){
-    <div class="auth-buttons" fxLayout="row" fxLayoutAlign="center center">
-      <a routerLink="/new" class="button">
+    <div class="auth-buttons">
+      <a routerLink="/sightingForm" class="button">
         <button mat-raised-button color="primary" class="btn">CREATE NEW REPORT</button>
       </a>
     </div>
     }
   </section>
 
-  <section class="content-section" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="20px">
-    <div fxFlex="40" fxLayoutAlign="center center">
-    <img
-      ngSrc="/PilotBoat.jpg"
-      alt="Shannon Pilot Boat stationed at Scattery Island"
-
-      loading="lazy"
-      height="390" width="520"/>
+  <section class="content-section layout-section">
+    <div class="flex-item image-container">
+      <img
+        ngSrc="/PilotBoat.jpg"
+        alt="Shannon Pilot Boat stationed at Scattery Island"
+        loading="lazy"
+        height="390" width="520"/>
     </div>
-    <div fxFlex="60">
-    <p>
-      Shannon Pilots are proud to provide this public service. Our work is
-      devoted to safety, security and environmental protection, thus enhancing
-      port efficiency. This is why we feel it important to assist the Irish
-      Whale and Dolphin Group to hopefully get a better understanding of
-      movement and habits of the resident bottlenose dolphins on the Shannon
-      Estuary. We as maritime pilots are the only group who transit the estuary
-      throughout the year on a daily basis and are therefore in a unique
-      position to be able to gather data that was not previously explored.
-    </p>
+    <div class="flex-item text-container">
+      <p>
+        Shannon Pilots are proud to provide this public service. Our work is
+        devoted to safety, security and environmental protection, thus enhancing
+        port efficiency. This is why we feel it important to assist the Irish
+        Whale and Dolphin Group to hopefully get a better understanding of
+        movement and habits of the resident bottlenose dolphins on the Shannon
+        Estuary. We as maritime pilots are the only group who transit the estuary
+        throughout the year on a daily basis and are therefore in a unique
+        position to be able to gather data that was not previously explored.
+      </p>
     </div>
-
   </section>
 
-  <section class="content-section" fxLayout fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="20px">
-    <p>
-      The main species we have in the estuary is the Bottlenose Dolphin. They
-      are probably the best known species of dolphin due to their coastal
-      habitats, widespread distribution, and many appearances on television.
-      Bottlenose dolphins are usually seen in small groups and are rarely seen
-      alone. They are quite active at the surface of the water. When traveling
-      slowly, about one-quarter to one-third of the body appears above the
-      water. When traveling at speed they often jump clear out of the water.
-    </p>
-    <img
-      alt="Bottlenose Dolphin breaching the water surface - Photo by Simon Berrow"
-      fxFlex="40"
-      height="334"
-      loading="lazy"
-      ngSrc='/bndidpic.jpg' width="510"/>
+  <section class="content-section layout-section">
+    <div class="flex-item">
+      <p>
+        The main species we have in the estuary is the Bottlenose Dolphin. They
+        are probably the best known species of dolphin due to their coastal
+        habitats, widespread distribution, and many appearances on television.
+        Bottlenose dolphins are usually seen in small groups and are rarely seen
+        alone. They are quite active at the surface of the water. When traveling
+        slowly, about one-quarter to one-third of the body appears above the
+        water. When traveling at speed they often jump clear out of the water.
+      </p>
+    </div>
+    <div class="flex-item image-container">
+      <img
+        alt="Bottlenose Dolphin breaching the water surface - Photo by Simon Berrow"
+        class="flex-image"
+        height="334"
+        loading="lazy"
+        ngSrc='/bndidpic.jpg' width="510"/>
+    </div>
   </section>
 
   <section class="content-section">
@@ -109,5 +111,3 @@
     </ul>
   </section>
 </div>
-//todo: new report button doesn't work
-

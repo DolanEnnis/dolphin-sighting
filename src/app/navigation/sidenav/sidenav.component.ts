@@ -8,7 +8,7 @@ import { MatDrawer } from '@angular/material/sidenav'; // Import MatDrawer
 
 @Component({
   selector: 'app-sidenav',
-  imports: [MatListModule, MatButtonModule,MatDrawer, RouterLink],
+  imports: [MatListModule, MatButtonModule,RouterLink],
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css'
 })

@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Sighting } from '../shared/types/sighting.type';
 import { Subscription } from 'rxjs';
 import { LoadingService } from '../shared/services/loading.service';
 import { SightingService } from '../shared/services/sighting.service';
+import { AuthService } from '../shared/services/auth.service';
 //import { MatProgressSpinnerModule, ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -15,6 +16,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import {MatIconButton} from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+
 
 /**
  * Interface for sighting data with formatted date.
@@ -46,6 +50,7 @@ interface SightingFormatted extends Sighting {
     MatCardModule,
     MatIconModule,
     MatIconButton,
+    MatTooltipModule,
   ],
   providers: [],
   templateUrl: './reports.component.html',
@@ -56,7 +61,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
  //essSpinnerMode = 'determinate';
   value = 50; // Initial value (not used in 'determinate' mode)
  // loading: boolean = false; // Flag to indicate data loading state
-
+  authService = inject(AuthService);
   private sightingsSubscription: Subscription | undefined; // Subscription for sighting data observable
   dataSource = new MatTableDataSource<SightingFormatted>([]); // Data source for the MatTable
   displayedColumns: string[] = [
@@ -68,6 +73,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     'behaviour',
     'comments',
     'observer',
+    'actions',
   ]; // Columns to display in the table
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined; // Reference to the MatPaginator instance
@@ -96,6 +102,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /**
    * Lifecycle hook called once the component has been initialized.
    *
@@ -103,6 +110,15 @@ export class ReportsComponent implements OnInit, OnDestroy {
    * and pagination.
    */
   ngOnInit(): void {
+    this.loadSightings();
+  }
+
+  /**
+   * Fetches and loads sighting data.
+   * This method retrieves data from the sighting service, formats it,
+   * and updates the component's state.
+   */
+  private loadSightings(): void {
     this.loadingService.setLoading(true); // Show loading indicator
     this.sightingsSubscription = this.sightingService
       .getAllSightings({ sortField: 'date', sortDirection: 'desc' }) // Fetch sightings, sorted by date descending
@@ -135,6 +151,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
         },
       });
   }
+
 
   /**
    * Applies a filter to the data source.
@@ -192,6 +209,69 @@ export class ReportsComponent implements OnInit, OnDestroy {
       this.selectedSightingIndex--;
     }
   }
+
+  /**
+   * Checks if the current user can delete a sighting.
+   * Users can only delete their own sightings or anonymous sightings.
+   *
+   * @param sighting - The sighting to check delete permissions for
+   * @returns true if the user can delete the sighting, false otherwise
+   */
+  canDeleteSighting(sighting: SightingFormatted): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    const currentUserName = currentUser?.displayName;
+
+    // Allow deletion if:
+    // 1. The sighting observer matches the current user's displayName
+    // 2. The sighting observer is "Anonymous"
+    return sighting.observer === currentUserName || sighting.observer === 'Anonymous';
+  }
+
+  /**
+   * Deletes a sighting record.
+   * Calls the sighting service to delete the record and refreshes the data.
+   *
+   * @param sighting - The sighting record to delete
+   */
+  deleteSighting(sighting: SightingFormatted): void {
+    // Check if sighting has a valid ID
+    if (!sighting.id) {
+      console.error('Cannot delete sighting: ID is missing');
+      alert('Cannot delete sighting: Invalid record.');
+      return;
+    }
+
+    // Optional: Add confirmation dialog
+    if (!confirm(`Are you sure you want to delete this sighting from ${sighting.location} on ${sighting.formattedDate.toDateString()}?`)) {
+      return;
+    }
+
+    console.log('Deleting sighting:', sighting.id);
+
+    // Call the sighting service to delete the record (using Promise syntax)
+    this.sightingService.delete(sighting.id)
+      .then(() => {
+        console.log('Sighting deleted successfully');
+
+        // Refresh the data after successful deletion
+        this.loadSightings();
+
+        // If we're in single view and deleted the current item, adjust the selection
+        if (this.isSingleView && this.filteredSightings.length > 0) {
+          // If we deleted the last item, go to the previous one
+          if (this.selectedSightingIndex >= this.filteredSightings.length) {
+            this.selectedSightingIndex = Math.max(0, this.filteredSightings.length - 1);
+          }
+        }
+      })
+      .catch((error) => {
+        console.error('Error deleting sighting:', error);
+        // Optional: Show user-friendly error message
+        alert('Failed to delete sighting. Please try again.');
+      });
+  }
+
+
 
   /**
    * Lifecycle hook called when the component is destroyed.
