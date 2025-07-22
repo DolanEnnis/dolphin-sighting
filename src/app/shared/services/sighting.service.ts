@@ -6,7 +6,7 @@ import {
   collection,
   collectionData,
   doc,
-  docData,
+  //docData,
   setDoc,
   deleteDoc,
   query,
@@ -62,21 +62,23 @@ export class SightingService {
       )
     ) as Observable<SightingFormatted[]>;
   }
-
+/*
+These two methods not required at moment!
   getItem(id: string): Observable<Sighting> {
     const sightingDoc = doc(this.firestore, `sightings/${id}`);
     return docData(sightingDoc) as Observable<Sighting>;
   }
 
+  update(sighting: Sighting, id: string): Promise<void> {
+    const sightingDoc = doc(this.firestore, `sightings/${id}`);
+    return setDoc(sightingDoc, sighting);
+  }*/
   create(sighting: Sighting): Promise<void> {
     const sightingsCollection = collection(this.firestore, 'sightings');
     return setDoc(doc(sightingsCollection), sighting);
   }
 
-  update(sighting: Sighting, id: string): Promise<void> {
-    const sightingDoc = doc(this.firestore, `sightings/${id}`);
-    return setDoc(sightingDoc, sighting);
-  }
+
 
   delete(id: string): Promise<void> {
     const sightingDoc = doc(this.firestore, `sightings/${id}`);
