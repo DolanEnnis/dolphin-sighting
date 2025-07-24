@@ -10,18 +10,14 @@ import { routes } from './app/app.routes';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
-import {AuthGuard} from './app/auth.guard'; // Import FIREBASE_OPTIONS
-
+import { AuthGuard } from './app/auth.guard';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideStore({ sighting: sightingReducer }),
-    { provide: FIREBASE_OPTIONS, useValue: environment.firebase }, // Provide Firebase config
-    provideFirebaseApp(() => {
-      const app = initializeApp(environment.firebase);
-      return app; // Return the app instance
-    }),
+    // The new modular providers are all you need.
+    // The initializeApp function is called automatically.
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideHttpClient(),
@@ -29,5 +25,4 @@ bootstrapApplication(AppComponent, {
     provideAnimationsAsync(),
     AuthGuard,
   ],
-}).catch(err => console.error("Bootstrap Error:", err)); // Add error logging here
-
+}).catch(err => console.error("Bootstrap Error:", err));

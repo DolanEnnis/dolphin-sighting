@@ -50,7 +50,8 @@ export class SightingService {
     const sightingsCollection = collection(this.firestore, 'sightings');
     const q = query(
       sightingsCollection,
-      orderBy(options.sortField, "desc")
+      // Use the sortDirection from the options object to make the method flexible.
+      orderBy(options.sortField, options.sortDirection)
     );
     return collectionData(q, { idField: 'id' }).pipe(
       catchError((error) => {

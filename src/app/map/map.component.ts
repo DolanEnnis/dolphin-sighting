@@ -13,22 +13,23 @@ import { MatCardModule } from '@angular/material/card';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+// 'leaflet/dist/leaflet.css' is removed as per instructions above
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import { SightingService } from '../shared/services/sighting.service';
 import { takeUntil } from 'rxjs/operators';
-import {Subject, Subscription} from 'rxjs';
-
+import { Subject } from 'rxjs';
 
 interface Sighting {
   lat: number;
   long: number;
-  date?: any; // Adjust type as needed based on your Firebase data
+  date?: any;
   observer?: string;
   numbers?: string;
-  [key: string]: any; // Add index signature
+  [key: string]: any;
 }
 
-// Define the SightingFormatted interface
 interface SightingFormatted extends Sighting {
   formattedDate: Date;
 }
@@ -46,8 +47,8 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
   private map: L.Map | undefined;
   private readonly centerCoordinates: L.LatLngExpression = [52.6, -9.5];
   private readonly zoomLevel = 12;
-  private sightingsSubscription: Subscription | undefined;
-  allSightings: SightingFormatted[] = []; // Changed to SightingFormatted
+  // The 'sightingsSubscription' property is no longer needed
+  allSightings: SightingFormatted[] = [];
   filteredSightings: SightingFormatted[] = [];
   uniqueYears: number[] = [];
   selectedYear: string | number = 'all';
@@ -57,22 +58,33 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private sightingService: SightingService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    const iconDefault = L.icon({
+      iconUrl,
+      iconRetinaUrl,
+      shadowUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
+    });
+
+    L.Marker.prototype.options.icon = iconDefault;
+  }
 
   ngOnInit(): void {
     this.loadSightings();
-
   }
 
   ngAfterViewInit(): void {
     this.initMap();
-
   }
 
   ngOnDestroy(): void {
-    if (this.sightingsSubscription) {
-      this.sightingsSubscription.unsubscribe();
-    }
+    // This is the correct way to use the destroy$ subject.
+    // It will automatically unsubscribe from all streams using takeUntil.
+    this.destroy$.next();
+    this.destroy$.complete();
 
     if (this.map) {
       this.map.remove();
@@ -80,6 +92,9 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private initMap(): void {
+    if (this.map || !this.mapContainer) {
+      return;
+    }
     this.map = L.map(this.mapContainer.nativeElement).setView(
       this.centerCoordinates,
       this.zoomLevel
@@ -93,11 +108,12 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   loadSightings(): void {
-    this.sightingsSubscription = this.sightingService
+    // No need to assign the subscription to a variable
+    this.sightingService
       .getAllSightings({ sortField: 'date', sortDirection: 'asc' })
       .pipe(takeUntil(this.destroy$))
       .subscribe((sightings) => {
-        this.allSightings = sightings; // Data is already SightingFormatted
+        this.allSightings = sightings;
         this.extractUniqueYears();
         this.selectedYear = this.uniqueYears.includes(new Date().getFullYear())
           ? new Date().getFullYear()
@@ -111,11 +127,11 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
   private extractUniqueYears(): void {
     const years = new Set<number>();
     this.allSightings.forEach((sighting) => {
-      if (sighting.formattedDate) { // Use formattedDate here
+      if (sighting.formattedDate) {
         years.add(sighting.formattedDate.getFullYear());
       }
     });
-    this.uniqueYears = Array.from(years).sort();
+    this.uniqueYears = Array.from(years).sort((a, b) => b - a); // Sort descending for recent years first
   }
 
   filterByYear(): void {
@@ -125,55 +141,29 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
 
   private filterSightings(): void {
     if (this.selectedYear === 'all') {
-      this.filteredSightings = [...this.allSightings]; // Use formattedDate here
+      this.filteredSightings = [...this.allSightings];
     } else if (typeof this.selectedYear === 'number') {
-
-      this.filteredSightings = this.allSightings.filter((sighting) => {
-        return sighting.formattedDate && sighting.formattedDate.getFullYear() === this.selectedYear; // Use formattedDate here
-      });
+      this.filteredSightings = this.allSightings.filter(
+        (sighting) =>
+          sighting.formattedDate &&
+          sighting.formattedDate.getFullYear() === this.selectedYear
+      );
     }
   }
 
   private updateMarkers(): void {
-    // Clear existing markers
     this.sightingMarkers.forEach((marker) => this.map?.removeLayer(marker));
     this.sightingMarkers = [];
 
     this.filteredSightings.forEach((sighting) => {
       const lat = sighting.lat;
-      const long = -sighting.long;// Negate longitude here
+      // Note: Negating longitude is specific to your data source.
+      // This is correct if your source stores western longitudes as positive numbers.
+      const long = -sighting.long;
 
-      if (
-
-        !isNaN(lat) &&
-        lat >= 52.5 &&
-        lat <= 52.7 &&
-
-        !isNaN(long) &&
-        long <= -8.5 &&
-        long >= -10
-      ) {
+      if (this.isValidCoordinate(lat, long)) {
         const marker = L.marker([lat, long]);
-        let popupContent = '';
-        if (sighting.formattedDate) {
-          const formattedDate = sighting.formattedDate.toLocaleString('en-IE', {
-            day: 'numeric',
-            month: 'numeric',
-            year: 'numeric',
-          });
-          popupContent += `Date: ${formattedDate}<br>`;
-        } else {
-          popupContent += 'Date: Not available<br>';
-        }
-
-        if (sighting.observer) {
-          popupContent += `Observer: ${sighting.observer}<br>`;
-        }
-
-        if (sighting.numbers) {
-          popupContent += `Group Size: ${sighting.numbers}<br>`;
-        }
-
+        const popupContent = this.createPopupContent(sighting);
         marker.bindPopup(popupContent);
         marker.addTo(this.map!);
         this.sightingMarkers.push(marker);
@@ -181,5 +171,39 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
+  // Extracted logic into helper methods for better readability
+  private isValidCoordinate(lat: number, long: number): boolean {
+    return (
+      !isNaN(lat) &&
+      lat >= 52.5 &&
+      lat <= 52.7 &&
+      !isNaN(long) &&
+      long <= -8.5 &&
+      long >= -10
+    );
+  }
 
+  private createPopupContent(sighting: SightingFormatted): string {
+    let content = '';
+    if (sighting.formattedDate) {
+      const formattedDate = sighting.formattedDate.toLocaleString('en-IE', {
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric',
+      });
+      content += `<b>Date:</b> ${formattedDate}<br>`;
+    } else {
+      content += '<b>Date:</b> Not available<br>';
+    }
+
+    if (sighting.observer) {
+      content += `<b>Observer:</b> ${sighting.observer}<br>`;
+    }
+
+    if (sighting.numbers) {
+      content += `<b>Group Size:</b> ${sighting.numbers}<br>`;
+    }
+
+    return content;
+  }
 }
