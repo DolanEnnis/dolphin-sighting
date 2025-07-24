@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { CommonModule} from '@angular/common';
-import { RouterOutlet,  } from '@angular/router';
-import {AuthService} from './shared/services/auth.service';
-import {FooterComponent} from './footer/footer.component'
-import {HeaderComponent} from './navigation/header/header.component';
+import { RouterOutlet } from '@angular/router';
+import { AuthService } from './shared/services/auth.service';
+import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './navigation/header/header.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,33 +15,34 @@ import { MatSidenav } from '@angular/material/sidenav';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet,  FooterComponent, HeaderComponent, MatSidenavModule, MatToolbarModule, MatIconModule, MatButtonModule, MatListModule, SidenavComponent],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    FooterComponent,
+    HeaderComponent,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatListModule,
+    SidenavComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+// FIX: Removed "implements OnInit" as it's no longer needed.
+export class AppComponent {
+  // The authService is injected but no longer needs to be explicitly used in the component's class.
+  // It's available for child components and routing.
   authService = inject(AuthService);
   title = 'dolphin-sightings-app';
 
   @ViewChild('drawer') drawer!: MatSidenav;
 
 
-  ngOnInit(): void {
-    this.authService.user$.subscribe((user: any) => {
-      if (user) {
-        this.authService.currentUserSig.set({
-          email: user.email!,
-          username: user.displayName!,
-        });
-      } else {
-        this.authService.currentUserSig.set(null);
-      }
-    });
-  }
+  // The AuthService now correctly manages its own state.
 
-  logout(): void{
-    this.authService.logout();
-  }
 
+  // This action is already handled cleanly within the HeaderComponent.
 }
 

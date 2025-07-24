@@ -1,39 +1,45 @@
-import { Component,inject, OnInit } from '@angular/core';
-//import { RouterLink, RouterOutlet } from '@angular/router';
+import { Component, computed, inject, Output, EventEmitter } from '@angular/core'; // Import Output & EventEmitter
 import { AuthService } from '../../shared/services/auth.service';
-import {RouterLink} from '@angular/router';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from '@angular/material/button';
-
-
+import { Router, RouterLink } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
+import { UserInterface } from '../../shared/types/userInterface';
 
 @Component({
   selector: 'app-header',
-  //imports: [ RouterOutlet, RouterLink],
+  standalone: true,
   templateUrl: './header.component.html',
   imports: [
-    RouterLink,MatToolbarModule,MatButtonModule
+    RouterLink,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule // Add MatIconModule here
   ],
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+  // Create an event emitter that the parent component (AppComponent) can listen to.
+  @Output() toggleSidenav = new EventEmitter<void>();
+  router = inject(Router); // Inject the Router
+
   authService = inject(AuthService);
 
-  ngOnInit(): void {
-    this.authService.user$.subscribe((user: any) => {
-      if (user) {
-        this.authService.currentUserSig.set({
-          email: user.email!,
-          username: user.displayName!,
-        });
-      } else {
-        this.authService.currentUserSig.set(null);
-      }
-    });
-  }
+  loggedInUsername = computed<string | undefined>(() => {
+    const user: UserInterface | null = this.authService.currentUserSig();
+    if (user) {
+      return user.username;
+    }
+    return undefined;
+  });
 
-  logout(): void{
+  logout(): void {
     this.authService.logout();
+    this.router.navigateByUrl('/');
   }
 
+  //  Add a method to be called by the button click, which emits the event.
+  onToggleSidenav(): void {
+    this.toggleSidenav.emit();
+  }
 }

@@ -1,29 +1,33 @@
-import { Component, inject,Input, OnInit } from '@angular/core';
-import { AuthService } from "../../shared/services/auth.service";
-import {MatListModule} from "@angular/material/list";
-import {MatButtonModule} from "@angular/material/button";
-import {RouterLink} from "@angular/router";
-import { MatDrawer } from '@angular/material/sidenav'; // Import MatDrawer
-
+import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { MatListModule } from '@angular/material/list';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-sidenav',
-  imports: [MatListModule, MatButtonModule,RouterLink],
+  standalone: true,
+  imports: [MatListModule, RouterLink],
   templateUrl: './sidenav.component.html',
-  styleUrl: './sidenav.component.css'
+  styleUrls: ['./sidenav.component.css']
 })
-export class SidenavComponent implements OnInit {
-
-  @Input() drawer!: MatDrawer;
-
+export class SidenavComponent {
+  // This will emit an event that the parent component (AppComponent) can listen for.
+  @Output() closeSidenav = new EventEmitter<void>();
 
   authService = inject(AuthService);
+  router = inject(Router); // Inject the Router
 
-  ngOnInit(): void {
-    // You might not need anything specific here for this functionality
+  // This single method will be called by all links to emit the event.
+  onClose(): void {
+    this.closeSidenav.emit();
   }
 
+  // The logout method handles the auth logic and also closes the sidenav.
   logout(): void {
-    this.authService.logout();
+    // FIX: Subscribe to the logout observable and navigate on completion.
+    this.authService.logout().subscribe(() => {
+      this.onClose(); // Close the sidenav first
+      this.router.navigateByUrl('/'); // Then navigate to the welcome page
+    });
   }
 }

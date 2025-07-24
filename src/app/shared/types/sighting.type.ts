@@ -1,6 +1,6 @@
 
-import firebase from 'firebase/compat/app';
-import flatpickr from 'flatpickr'; // Or import from 'firebase/app' and other specific modules
+//import firebase from 'firebase/compat/app';
+//import flatpickr from 'flatpickr'; // Or import from 'firebase/app' and other specific modules
 //import 'firebase/compat/firestore'; // Import for firestore
 //import not needed as using date: any;
 
@@ -18,6 +18,10 @@ export interface Sighting {
   observerID: string;     // "yeNcVSx6AGNi2IiKWD3tlYI08T13"
   seaState: string;       // "2"
   tide: string;           // "HW -3"
+}
+
+export interface SightingFormatted extends Sighting {
+  formattedDate: Date;
 }
 /*
 const tidiedData  = {

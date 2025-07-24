@@ -19,24 +19,21 @@
       <a routerLink="/signup" aria-label="Navigate to sign up page">sign up</a> first.
     </p>
 
-
-    @if (authService.currentUserSig()== null){
-    <div class="auth-buttons">
-      <a routerLink="/register" class="button">
-        <button mat-raised-button color="primary" class="btn">SIGN UP NOW</button>
-      </a>
-      <a routerLink="/login" class="button">
-        <button mat-raised-button color="primary" class="btn">LOG IN NOW</button>
-      </a>
-    </div>
-    }
-
-    @if (authService.currentUserSig()){
-    <div class="auth-buttons">
-      <a routerLink="/sightingForm" class="button">
-        <button mat-raised-button color="primary" class="btn">CREATE NEW REPORT</button>
-      </a>
-    </div>
+    <!--
+      FIX: The duplicated content has been removed and this block is now correctly placed
+      within the first content section.
+    -->
+    @if (authService.currentUserSig()) {
+      <!-- This block renders if the user is logged in -->
+      <div class="auth-buttons">
+        <a mat-raised-button color="primary" routerLink="/sightingForm">CREATE NEW REPORT</a>
+      </div>
+    } @else {
+      <!-- This block renders if the user is logged out -->
+      <div class="auth-buttons">
+        <a mat-raised-button color="primary" routerLink="/register">SIGN UP NOW</a>
+        <a mat-raised-button color="primary" routerLink="/login">LOG IN NOW</a>
+      </div>
     }
   </section>
 

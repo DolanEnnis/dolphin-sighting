@@ -1,23 +1,25 @@
 <mat-nav-list>
   @if (!authService.currentUserSig()) {
-    <a mat-list-item routerLink="/login" (click)="drawer.close()">
+    <a mat-list-item routerLink="/login" (click)="onClose()">
       Login
     </a>
-    <a mat-list-item routerLink="/register" (click)="drawer.close()">
+    <a mat-list-item routerLink="/register" (click)="onClose()">
       Register
     </a>
   } @else {
-    <a mat-list-item routerLink="/sightingForm" (click)="drawer.close()">
+    <a mat-list-item routerLink="/sightingForm" (click)="onClose()">
       New Report
     </a>
-    <a mat-list-item routerLink="/reports" (click)="drawer.close()">
+    <a mat-list-item routerLink="/reports" (click)="onClose()">
       List Of Reports
     </a>
-    <a mat-list-item routerLink="/map" (click)="drawer.close()">
+    <a mat-list-item routerLink="/map" (click)="onClose()">
       Map
     </a>
-    <mat-list-item (click)="logout(); drawer.close()">
+    <!-- For accessibility, this is an anchor tag that acts like a button. -->
+      <!-- It now correctly calls the component's logout method. -->
+    <a mat-list-item (click)="logout()" style="cursor: pointer;">
       Logout
-    </mat-list-item>
+    </a>
   }
 </mat-nav-list>

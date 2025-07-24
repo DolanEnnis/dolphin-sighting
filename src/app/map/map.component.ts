@@ -14,25 +14,16 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
 // 'leaflet/dist/leaflet.css' is removed as per instructions above
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
-import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
-import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+//import iconUrl from 'leaflet/dist/images/marker-icon.png';
+//import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+//import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
 import { SightingService } from '../shared/services/sighting.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { SightingFormatted } from '../shared/types/sighting.type';
 
-interface Sighting {
-  lat: number;
-  long: number;
-  date?: any;
-  observer?: string;
-  numbers?: string;
-  [key: string]: any;
-}
 
-interface SightingFormatted extends Sighting {
-  formattedDate: Date;
-}
+
 
 @Component({
   selector: 'app-map',
@@ -60,9 +51,9 @@ export class MapComponent implements AfterViewInit, OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {
     const iconDefault = L.icon({
-      iconUrl,
-      iconRetinaUrl,
-      shadowUrl,
+      iconUrl: 'images/marker-icon.png',
+      iconRetinaUrl: 'images/marker-icon-2x.png',
+      shadowUrl: 'images/marker-shadow.png',
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],

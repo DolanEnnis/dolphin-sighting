@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { catchError, Observable, map } from 'rxjs';
-import { Sighting } from '../types/sighting.type';
+import { Sighting, SightingFormatted } from '../types/sighting.type';
 import {
   Firestore,
   collection,
@@ -14,10 +14,7 @@ import {
   Timestamp,
 } from '@angular/fire/firestore';
 
-// Define the SightingFormatted interface
-interface SightingFormatted extends Sighting {
-  formattedDate: Date;
-}
+
 
 interface SortOptions {
   sortField: string;

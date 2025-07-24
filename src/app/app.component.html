@@ -1,15 +1,15 @@
-<mat-drawer-container class="drawer-container">
-  <mat-drawer #drawer mode="side">
-    <app-sidenav [drawer]="drawer"></app-sidenav>
-  </mat-drawer>
-  <mat-drawer-content>
-    <app-header></app-header>
-    <button mat-icon-button (click)="drawer.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <main>
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer mode="over">
+    <!-- Add the (closeSidenav) event binding here -->
+    <app-sidenav (closeSidenav)="drawer.close()"></app-sidenav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Your header will likely need a button to toggle the drawer -->
+    <app-header (toggleSidenav)="drawer.toggle()"></app-header>
+    <main class="main-content">
       <router-outlet></router-outlet>
     </main>
     <app-footer></app-footer>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>

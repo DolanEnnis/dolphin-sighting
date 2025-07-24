@@ -1,18 +1,10 @@
-.mat-drawer-container {
-  position: relative;
+.sidenav-container {
+  /* This is the only style needed. It makes the container fill the viewport,
+     which is critical for Angular Material's overlay and stacking logic to work correctly. */
   height: 100%;
-  width: 100%;
 }
 
-.mat-drawer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 250px;
-  z-index: 1;
-  box-shadow: 3px 0 6px rgba(0,0,0,.24);
-}
-.mat-drawer-content {
-  height: 100vh;
+.main-content {
+  /* Optional: Add some padding to the main content area for better spacing. */
+  padding: 20px;
 }

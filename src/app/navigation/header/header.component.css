@@ -4,7 +4,7 @@ mat-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 16px; /* Added padding for better spacing */
+  padding: 0 16px;
 }
 
 .toolbar-title {
@@ -13,7 +13,7 @@ mat-toolbar {
 }
 
 .spacer {
-  flex: 1 1 auto; /* This correctly pushes items to the sides */
+  flex: 1 1 auto;
 }
 
 .user-info {
@@ -30,21 +30,43 @@ mat-toolbar {
 
 .button-group {
   display: flex;
-  gap: 8px; /* Use gap for consistent spacing between buttons */
+  gap: 8px;
 }
 
-/* --- Simplified Button and Link Styling --- */
-/*
-  Consolidated rules for both <a> and <button> elements inside the toolbar
-  to reduce redundancy and ensure consistency.
-*/
 .mat-toolbar a,
 .mat-toolbar button {
   color: white;
-  text-decoration: none; /* This applies to <a> tags */
+  text-decoration: none;
 }
 
 .mat-toolbar a:hover,
 .mat-toolbar button:hover {
   color: lightgray;
+}
+
+/* --- Responsive Styles --- */
+
+/* By default, the mobile menu button is hidden on larger screens */
+.mobile-nav-button {
+  display: none;
+}
+
+/* Media query for smaller screens (e.g., tablets and phones) */
+@media (max-width: 768px) {
+  /* Hide the desktop navigation links */
+  .desktop-nav {
+    display: none;
+  }
+
+  /* Show the mobile menu button */
+  .mobile-nav-button {
+    display: inline-flex;
+  }
+
+  /* Optional: Adjust title size for smaller screens */
+  .toolbar-title {
+    font-size: 1.1rem;
+    /* Give it a little space from the menu icon */
+    margin-left: 8px;
+  }
 }

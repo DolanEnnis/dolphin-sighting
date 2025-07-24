@@ -14,7 +14,7 @@ import {AuthService} from '../../shared/services/auth.service';
 export class LoginComponent {
   fb = inject(FormBuilder)
   http= inject(HttpClient);
-  authService = new AuthService();
+  authService = inject(AuthService);
   router = inject(Router);
 
   form =this.fb.nonNullable.group({

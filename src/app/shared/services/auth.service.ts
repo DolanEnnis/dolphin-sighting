@@ -1,4 +1,4 @@
-import {Injectable, inject, signal} from '@angular/core';
+import {Injectable, inject, Signal} from '@angular/core';
 import {
   Auth,
   user,
@@ -6,9 +6,11 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
   signOut,
-  User
+  User,
+  UserCredential // <-- Import UserCredential
 } from '@angular/fire/auth';
-import {from, Observable} from 'rxjs';
+import {from, Observable, map} from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {UserInterface} from '../types/userInterface';
 
 @Injectable({
@@ -16,8 +18,23 @@ import {UserInterface} from '../types/userInterface';
 })
 export class AuthService {
   firebaseAuth = inject(Auth)
-  user$ = user(this.firebaseAuth);
-  currentUserSig = signal<UserInterface | null | undefined>(undefined);
+  readonly user$ = user(this.firebaseAuth);
+
+  public readonly currentUserSig: Signal<UserInterface | null> = toSignal(
+    this.user$.pipe(
+      // Explicitly type the 'user' parameter to prevent inference failure.
+      map((user: User | null): UserInterface | null => {
+        if (!user) {
+          return null;
+        }
+        return {
+          email: user.email!,
+          username: user.displayName ?? undefined,
+        };
+      })
+    ),
+    { initialValue: null }
+  );
 
   register(
     email: string,
@@ -28,7 +45,7 @@ export class AuthService {
       this.firebaseAuth,
       email,
       password
-    ).then((response) =>
+    ).then((response: UserCredential) => // <--  Explicitly type the 'response' parameter.
       updateProfile(response.user, {displayName: username}),
     );
     return from(promise);
@@ -41,9 +58,9 @@ export class AuthService {
     const promise = signInWithEmailAndPassword(
       this.firebaseAuth,
       email,
-      password).then(() => {
-    });
-    return from(promise);
+      password
+    );
+    return from(promise).pipe(map(() => undefined));
   }
 
   logout(): Observable <void> {

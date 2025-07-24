@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Sighting } from '../shared/types/sighting.type';
+import { SightingFormatted } from '../shared/types/sighting.type';
 import { Subscription } from 'rxjs';
 import { LoadingService } from '../shared/services/loading.service';
 import { SightingService } from '../shared/services/sighting.service';
@@ -20,13 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
-/**
- * Interface for sighting data with formatted date.
- * Extends the base Sighting interface to include a Date object.
- */
-interface SightingFormatted extends Sighting {
-  formattedDate: Date;
-}
+
 
 /**
  * Component for displaying reports of dolphin sightings.
