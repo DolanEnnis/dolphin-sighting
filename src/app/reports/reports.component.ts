@@ -118,14 +118,10 @@ export class ReportsComponent implements OnInit, OnDestroy {
       .getAllSightings({ sortField: 'date', sortDirection: 'desc' }) // Fetch sightings, sorted by date descending
       .subscribe({
         next: (sightings) => {
-          // Format the sighting data using the service method
-          const formattedSightings: SightingFormatted[] = sightings.map((sighting) =>
-            this.sightingService.convertToSightingFormatted(sighting)
-          );
-
-          // Update the data source with a new array instance
-          this.dataSource.data = [...formattedSightings];
-          this.filteredSightings = [...formattedSightings]; // Initialize filteredSightings
+          // FIX: The data from the service is already formatted.
+          // No need to map it again.
+          this.dataSource.data = [...sightings];
+          this.filteredSightings = [...sightings]; // Initialize filteredSightings
 
           // Set the paginator after data is assigned
           this.dataSource.paginator = this.paginator ?? null;
@@ -212,8 +208,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
    * @returns true if the user can delete the sighting, false otherwise
    */
   canDeleteSighting(sighting: SightingFormatted): boolean {
-    const currentUser = this.authService.getCurrentUser();
-    const currentUserName = currentUser?.displayName;
+    const currentUserName = this.authService.currentUserSig()?.username;
 
     // Allow deletion if:
     // 1. The sighting observer matches the current user's displayName

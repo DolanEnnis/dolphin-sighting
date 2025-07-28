@@ -19,10 +19,7 @@
       <a routerLink="/signup" aria-label="Navigate to sign up page">sign up</a> first.
     </p>
 
-    <!--
-      FIX: The duplicated content has been removed and this block is now correctly placed
-      within the first content section.
-    -->
+
     @if (authService.currentUserSig()) {
       <!-- This block renders if the user is logged in -->
       <div class="auth-buttons">
@@ -42,7 +39,7 @@
       <img
         ngSrc="/assets/PilotBoat.jpg"
         alt="Shannon Pilot Boat stationed at Scattery Island"
-        loading="lazy"
+        priority
         height="390" width="520"/>
     </div>
     <div class="flex-item text-container">

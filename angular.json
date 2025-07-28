@@ -34,7 +34,11 @@
               "node_modules/flatpickr/dist/flatpickr.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "leaflet",
+              "flatpickr"
+            ]
           },
           "configurations": {
             "production": {

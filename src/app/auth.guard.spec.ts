@@ -3,14 +3,13 @@ import { Router } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './shared/services/auth.service';
 import { signal, WritableSignal } from '@angular/core';
-import { User } from '@angular/fire/auth';
+import { UserInterface } from './shared/types/userInterface';
 
 // Create a mock for the AuthService to control its behavior in tests.
 class MockAuthService {
-  // Use a WritableSignal to easily change the user state for different tests.
-  currentUserSig: WritableSignal<User | null | undefined> = signal(undefined);
+  // IMPROVEMENT: The mock signal should match the real service's signal type for accuracy.
+  currentUserSig: WritableSignal<UserInterface | null> = signal(null);
 }
-
 // Create a mock for the Router to spy on navigation calls.
 class MockRouter {
   navigate(commands: any[]): Promise<boolean> {
@@ -45,8 +44,7 @@ describe('AuthGuard', () => {
 
   it('should allow activation if user is logged in', async () => {
     // Arrange: Set the user signal to a logged-in state.
-    authService.currentUserSig.set({ uid: 'test-uid' } as User);
-
+    authService.currentUserSig.set({email: 'test@test.com', username: 'testuser' } );
     // Act: Call the canActivate method.
     const canActivate = await guard.canActivate();
 

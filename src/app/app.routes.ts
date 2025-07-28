@@ -1,21 +1,42 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from './auth/register/register.component';
-import { LoginComponent } from './auth/login/login.component';
-import {WelcomeComponent} from './welcome/welcome.component';
-import {ReportsComponent} from './reports/reports.component';
-import {AuthGuard} from './auth.guard';
-import {SightingFormComponent} from './sighting-form/sighting-form.component';
-
-import {MapComponent} from './map/map.component';
-// Assuming you have LoginComponent
+import { WelcomeComponent } from './welcome/welcome.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
   { path: '', component: WelcomeComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
-  { path: 'sightingForm', component: SightingFormComponent, canActivate: [AuthGuard]},
-  { path: 'map', component: MapComponent },
-  // ... other routes
+  {
+    path: 'register',
+    loadComponent: () =>
+      import('./auth/register/register.component').then(
+        (m) => m.RegisterComponent
+      ),
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./auth/login/login.component').then((m) => m.LoginComponent),
+  },
+  {
+    path: 'reports',
+    loadComponent: () =>
+      import('./reports/reports.component').then((m) => m.ReportsComponent),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'sightingForm',
+    loadComponent: () =>
+      import('./sighting-form/sighting-form.component').then(
+        (m) => m.SightingFormComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'map',
+    loadComponent: () =>
+      import('./map/map.component').then((m) => m.MapComponent),
+    canActivate: [AuthGuard],
+  },
+  // Redirect any other path to the welcome page
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

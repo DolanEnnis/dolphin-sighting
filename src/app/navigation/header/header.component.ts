@@ -33,9 +33,11 @@ export class HeaderComponent {
     return undefined;
   });
 
+
   logout(): void {
-    this.authService.logout();
-    this.router.navigateByUrl('/');
+    this.authService.logout().subscribe(() => {
+      this.router.navigateByUrl('/');
+    });
   }
 
   //  Add a method to be called by the button click, which emits the event.
